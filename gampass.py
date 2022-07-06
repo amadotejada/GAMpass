@@ -33,10 +33,9 @@ def generate_key() -> str:
     """
     gam_path = os.path.dirname(os.path.realpath(__file__))
     gam_key = Path(f"{gam_path}/gam.key")
-    print(gam_key)
     if not gam_key.is_file():
         add_alias()
-        print("\n[1] Generating GAMpass encryption Key")
+        print("\n* Generating GAMpass encryption Key")
         key = Fernet.generate_key()
         with open(f"{gam_path}/gam.key", "wb") as file:
             file.write(key)
@@ -66,7 +65,7 @@ def encrypt_file() -> None:
     It encrypts the secret files and renames it to `file.encrypted`
     :return: None
     """
-    gam_path = os.path.dirname(sys.argv[0])
+    gam_path = os.path.dirname(os.path.realpath(__file__))
     for files in secrets:
         path = Path(f"{gam_path}/{files}")
         if path.is_file():
@@ -90,7 +89,7 @@ def decrypt_file() -> None:
     :return: None
     """
     print("\nDecrypting GAM secrets via unopass:")
-    gam_path = os.path.dirname(sys.argv[0])
+    gam_path = os.path.dirname(os.path.realpath(__file__))
     for files in secrets:
         path = Path(f"{gam_path}/{files}.encrypted")
         if path.is_file():

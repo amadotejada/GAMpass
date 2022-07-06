@@ -50,7 +50,7 @@ macOS Touch ID will prompt for your biometrics.
 Usage: python gampass.py [option]
 
 Options:
-	generate	Generate a key & encrypt secrets
+	generate	Generate a key and encrypt secrets
 	encrypt		Encrypt GAM files
 	decrypt		Decrypt GAM files
 
