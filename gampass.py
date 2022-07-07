@@ -8,11 +8,8 @@ from unopass import unopass as secret
 home = str(Path.home())
 script_path = os.path.realpath(__file__)
 
-# A list of the secrets that will be encrypted.
+# A list of the GAM secrets that will be encrypted/decrypted.
 secrets = ["client_secrets.json", "oauth2service.json", "oauth2.txt"]
-
-# It's using the unopass library to decrypt the credential from 1Password.
-decrypt_key = secret.unopass("gampass", "gam", "credential")
 
 
 def add_alias() -> None:
@@ -39,71 +36,82 @@ def generate_key() -> str:
         with open(f"{gam_path}/gam.key", "wb") as file:
             file.write(key)
             add_alias()
-            encrypt_file()
+            encrypt_file(key)
             print("* GAMpass encryption Key generated")
             print("* Encrypted GAM secrets")
             print(f"* Added gampass as alias to {home}/.zshrc\n")
             print("Add to your 1Password account as follows:")
             print("\t[1] Open 1Password")
             print("\t[2] Create a vault named gampass")
-            print("\t[3] Add a new PASSWORD item with the title gam")
-            print(f"\t[4] For 'credential' add {key.decode()}")
+            print("\t[3] Add/Update a new password item with the title gamkey")
+            print(f"\t[4] For 'password' add/update the {key.decode()}")
             print("\t[5] You're done!")
-            print("\nNote: gam.key will be deleted on successful gampass first run")
-            print(
-                "Note: If these are updated GCP secrets, update the 1Password gampass item with new key\n"
-            )
+            print("\nNote: The gam.key file will be deleted after a successful gampass run")
+            print("\033[93mImportant: Create or Update the 1Password item with the key listed above\033[0m\n")
             return key
     else:
         print(f"\nGAM [gam.key] file already exists: {gam_path}/\n")
         return
 
 
-def encrypt_file() -> None:
+def encrypt_file(key=None) -> None:
     """
     It encrypts the secret files and renames it to `file.encrypted`
     :return: None
     """
-    gam_path = os.path.dirname(os.path.realpath(__file__))
-    for files in secrets:
-        path = Path(f"{gam_path}/{files}")
-        if path.is_file():
-            f = Fernet(decrypt_key)
-            with open(f"{gam_path}/{files}", "rb") as file:
-                encrypted = file.read()
-            encrypted = f.encrypt(encrypted)
-            with open(f"{gam_path}/{files}.encrypted", "wb") as file:
-                file.write(encrypted)
-                Path(path).unlink(missing_ok=True)
+    try:
+        if key is None:
+            key = secret.unopass("gampass", "gamkey", "password")
+        gam_path = os.path.dirname(os.path.realpath(__file__))
+        for files in secrets:
+            path = Path(f"{gam_path}/{files}")
+            if path.is_file():
+                f = Fernet(key)
                 secret.signout(deauthorize=True)
-        else:
-            print(f"\nGAM unencrypted secrets not found in {gam_path}/:\n{secrets}\n")
-            secret.signout(deauthorize=True)
-            exit(1)
-
+                with open(f"{gam_path}/{files}", "rb") as file:
+                    encrypted = file.read()
+                encrypted = f.encrypt(encrypted)
+                with open(f"{gam_path}/{files}.encrypted", "wb") as file:
+                    file.write(encrypted)
+                    Path(path).unlink(missing_ok=True)
+            else:
+                print(f"\nGAM unencrypted secrets not found in {gam_path}/:\n{secrets}\n")
+                secret.signout(deauthorize=True)
+                exit(1)
+    except Exception as e:
+        print(f"\nError: {e}")
+        secret.signout(deauthorize=True)
+        exit(1)
 
 def decrypt_file() -> None:
     """
     It decrypts the encrypted secrets in the GAM directory, deletes encryption key
     :return: None
     """
-    print("\nDecrypting GAM secrets via unopass:")
-    gam_path = os.path.dirname(os.path.realpath(__file__))
-    for files in secrets:
-        path = Path(f"{gam_path}/{files}.encrypted")
-        if path.is_file():
-            f = Fernet(decrypt_key)
-            with open(f"{gam_path}/{files}.encrypted", "rb") as file:
-                encrypted = file.read()
-            decrypted = f.decrypt(encrypted)
-            with open(f"{gam_path}/{files}", "wb") as file:
-                file.write(decrypted)
-            print(f"Decrypted: {files}")
-        else:
-            print(f"\nGAM encrypted .encrypted secrets not found in {gam_path}/\n")
-            return
-    Path(f"{gam_path}/gam.key").unlink(missing_ok=True)
-    print("Processing GAM request...\n----------------------\n")
+    try:
+        print("\nDecrypting GAM secrets via unopass:")
+        # It's using the unopass library to decrypt the credential from 1Password.
+        decrypt_key = secret.unopass("gampass", "gamkey", "password")
+        gam_path = os.path.dirname(os.path.realpath(__file__))
+        for files in secrets:
+            path = Path(f"{gam_path}/{files}.encrypted")
+            if path.is_file():
+                f = Fernet(decrypt_key)
+                with open(f"{gam_path}/{files}.encrypted", "rb") as file:
+                    encrypted = file.read()
+                decrypted = f.decrypt(encrypted)
+                with open(f"{gam_path}/{files}", "wb") as file:
+                    file.write(decrypted)
+                print(f"Decrypted: {files}")
+            else:
+                print(f"\nGAM encrypted .encrypted secrets not found in {gam_path}/\n")
+                return
+        Path(f"{gam_path}/gam.key").unlink(missing_ok=True)
+        print("\033[92mProcessing GAM request...\033[0m\n----------------------\n")
+    except Exception as e:
+        print(f"\nError: Check your 1Password key and try again\n{e}")
+        secret.signout(deauthorize=True)
+        exit(1)
 
 
 def help_options() -> None:
