@@ -51,7 +51,7 @@ GAM results. GAMpass encrypts the secrets with the latest key automatically in t
 
 ## Limitations
 Eveyrything that works with GAM will work with *GAMpass*, except for the following:
-- Multi-domain support via gam `select` does not work becase gampass currently only encrypts one set of secrets. 
+- Multi-workspace domain support via gam `select` does not work becase *GAMpass* currently only encrypts one set of secrets. 
     -   This will be fixed in the future.
 
 - Scheduled jobs via cron, etc do not work because Biometrics is prompted to decrypt the secrets.
