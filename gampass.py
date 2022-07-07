@@ -6,7 +6,6 @@ from cryptography.fernet import Fernet
 from unopass import unopass as secret
 
 home = str(Path.home())
-gam_path = os.path.dirname(sys.argv[0])
 script_path = os.path.realpath(__file__)
 
 # A list of the secrets that will be encrypted.
@@ -80,7 +79,7 @@ def encrypt_file() -> None:
         else:
             print(f"\nGAM unencrypted secrets not found in {gam_path}/:\n{secrets}\n")
             secret.signout(deauthorize=True)
-            return
+            exit(1)
 
 
 def decrypt_file() -> None:
