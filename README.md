@@ -26,7 +26,7 @@ Only tested on macOS 12.4+
 
 <img src="./screenshots/generate.png" width="80%">
 
-3. Open 1Password
+4. Open 1Password
     - create a vault named `gampass`
     - add a new PASSWORD item with the title `gam`
     - add the content of the `gampass.key` the `credential` field
@@ -34,16 +34,28 @@ Only tested on macOS 12.4+
 <img src="./screenshots/1pass.png" width="100%">
 
 ## Usage
-Instead of using the `gam` command, use `gampass`
+Put `gampass` before the gam command
+
+`gampass [gam] [gam args]`
 
 ```bash
-gampass info domain
+gampass gam info domain
 ```
 <img src="./screenshots/terminal.png" width="65%">
 
-macOS Touch ID will prompt for your biometrics.
+macOS Touch ID prompts for your biometrics decrypting the secrets
 
 <img src="./screenshots/results.png" width="50%">
+
+GAM results. GAMpass encrypts the secrets with the latest key automatically in the background.
+
+## Limitations
+Eveyrything that works with GAM will work with *GAMpass*, except for the following:
+- Multi-domain support via gam `select` does not work becase gampass currently only encrypts one set of secrets. 
+    -   This will be fixed in the future.
+
+- Scheduled jobs via cron, etc do not work because Biometrics is prompted to decrypt the secrets.
+    -   By design
 
 ## gampass.py options
 ```bash

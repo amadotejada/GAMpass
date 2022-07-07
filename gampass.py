@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+import subprocess
 
 from cryptography.fernet import Fernet
 from unopass import unopass as secret
@@ -15,9 +16,25 @@ secrets = ["client_secrets.json", "oauth2service.json", "oauth2.txt"]
 def add_alias() -> None:
     """
     Adds gampass as an alias to the user's `.zshrc` file & sources the file
+    If you don't use zsh, you can change the `.zshrc` file to your liking
     """
-    alias = f"alias gampass='f(){{ python {script_path} decrypt && gam \"\$@\" ; python {script_path} encrypt;  unset -f f; }}; f'"
-    os.system(f'echo "{alias}" >> {home}/.zshrc')
+    subprocess.Popen("""
+    cat << EOF >> %s/.zshrc
+
+alias gampass='python %s decrypt && gampass_encrypt &!'
+gampass_encrypt()
+{
+while true; do
+    if [[ \"\$(pgrep -x gam)\" ]]; then
+        sleep 1
+    else
+        python /Users/amado.tejada/.gam/gampass.py encrypt
+        break
+    fi
+done
+}
+    """ % (home, script_path), shell=True)
+
     os.system(f"source {home}/.zshrc > /dev/null 2>&1")
 
 
