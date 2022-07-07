@@ -9,14 +9,14 @@ Many Google Workspace admins use [GAM](https://github.com/GAM-team/GAM) or [GAMA
 ## Requirements
 - `pip install -r requirements.txt`
 - [unopass](https://github.com/amadotejada/unopass) configured 
-- GAM configured
+- GAM/GAMADV-XTD3 configured
 
 Only tested on macOS 12.4+
 
 ## First time setup
 
 1. Meet the requirements
-2. Move `gampass.py` to the same directory as GAM's secrets files.
+2. Move `gampass.py` to the same directory as GAM's secrets files, usually `~/.gam/`
 3. Run `python gampass.py generate`
     - this encrypts GAM secrets
         - ["client_secrets.json", "oauth2service.json", "oauth2.txt"]
