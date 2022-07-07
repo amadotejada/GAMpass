@@ -109,7 +109,7 @@ def decrypt_file() -> None:
         Path(f"{gam_path}/gam.key").unlink(missing_ok=True)
         print("\033[92mProcessing GAM request...\033[0m\n----------------------\n")
     except Exception as e:
-        print(f"\nError: Check your 1Password key and try again\n{e}")
+        print(f"\nError: Check your 1Password key and try again{e}")
         secret.signout(deauthorize=True)
         exit(1)
 
