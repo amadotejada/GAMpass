@@ -79,6 +79,8 @@ def setup_key(key=None) -> bool:
             print("\n* Note: The gam.key file will be deleted after a successful gampass run")
             print("\033[93m* Important: Create or Update the 1Password item with the key listed above\033[0m\n")
             return True
+        else:
+            Path(f"{gam_path}/gam.key").unlink(missing_ok=True)
     else:
         print(f"\n* GAMpass [gam.key] file already exists: {gam_path}/\n")
         return
@@ -150,7 +152,7 @@ def decrypt_file() -> None:
                         domains_secrets.append(f"{dirpath}/{files}")
 
         if domains_secrets:
-            print(f"* Decrypted {len(domains_secrets)//3} Google Workspace Domain!")
+            print(f"\033[93m* Decrypted {len(domains_secrets)//3} Google Workspace Domain!\033[0m")
             Path(f"{gam_path}/gam.key").unlink(missing_ok=True)
             print("\033[92m* Processing GAM request...\033[0m\n----------------------")
         else:
@@ -167,8 +169,8 @@ def decrypt_file() -> None:
 def help_options() -> None:
     print("\nUsage: gampass_cli [option]\n")
     print("Options:")
-    print("\tencrypt  \t\tEncrypt GAM all secrets")
-    print("\tdecrypt  \t\tDecrypt GAM all secrets")
+    print("\tencrypt  \t\tEncrypt all GAM secrets")
+    print("\tdecrypt  \t\tDecrypt all GAM secrets")
     print("\tsetup    \t\tSetup a key and encrypt secrets")
     print("\tupdates  \t\tView updates documentation")
     print("\tsync     \t\tEncrypt all domains with existing 1Password key")
