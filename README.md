@@ -36,13 +36,14 @@ Only tested on macOS 12.4+
 <img src="./screenshots/1pass.png" width="100%">
 
 ## GAM Usage
-Use this to make GAM calls.
+Use this to make GAM calls
+
 Put `gampass` before the GAM command
 
 `gampass gam [gam args]`
 
 ```bash
-gam select domain2 save | gam info domain
+gampass gam select domain2 save | gam info domain
 ```
 <img src="./screenshots/terminal.png" width="100%">
 
