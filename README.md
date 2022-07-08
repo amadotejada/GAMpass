@@ -14,7 +14,11 @@ Many Google Workspace admins use [GAM](https://github.com/GAM-team/GAM) or [GAMA
 
 Only tested on macOS 12.4+
 
+*GAMpass* is a work in progress, and should be considered beta software.
+
 ## First time setup
+**Back up your plaintext secrets in a different directory before you run setup.**
+**Once you verify you can encrypt/decrypt secrets you can delete the backup.**
 
 1. Meet the requirements
 2. Move `gampass.py` to the same directory as GAM's secrets files, usually `~/.gam/`

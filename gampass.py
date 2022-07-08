@@ -167,6 +167,7 @@ def decrypt_file() -> None:
 
 
 def help_options() -> None:
+    print("Use only this to manage your GAM secrets")
     print("\nUsage: gampass_cli [option]\n")
     print("Options:")
     print("\tencrypt  \t\tEncrypt all GAM secrets")
@@ -174,7 +175,6 @@ def help_options() -> None:
     print("\tsetup    \t\tSetup a key and encrypt secrets")
     print("\tupdates  \t\tView updates documentation")
     print("\tsync     \t\tEncrypt all domains with existing 1Password key")
-    print("\n")
     print("Example:")
     print("\tgampass_cli sync")
     print("\n")
