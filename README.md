@@ -2,11 +2,12 @@
 ##### Written by [Amado Tejada](https://www.linkedin.com/in/amadotejada/)
 
 ##
-Many Google Workspace admins use [GAM](https://github.com/GAM-team/GAM) or [GAMADV-XTD3](https://github.com/taers232c/GAMADV-XTD3) to manage their instance. Currently the secrets needed for these tools are stored on disk in plaintext.
+Many Google Workspace admins use [GAM](https://github.com/GAM-team/GAM) or [GAMADV-XTD3](https://github.com/taers232c/GAMADV-XTD3) to manage their instance. Currently, the secrets needed for these tools are stored on disk in plaintext.
 
 *GAMpass* is a simple tool to encrypt & decrypt GAM secrets at runtime using your biometrics with [unopass](https://github.com/amadotejada/unopass)
 
 ## Requirements
+-  python 3.6+
 - `pip install -r requirements.txt`
 - [unopass](https://github.com/amadotejada/unopass) configured 
 - GAM/GAMADV-XTD3 configured
@@ -17,61 +18,61 @@ Only tested on macOS 12.4+
 
 1. Meet the requirements
 2. Move `gampass.py` to the same directory as GAM's secrets files, usually `~/.gam/`
-3. Run `python gampass.py generate`
-    - this encrypts GAM secrets
+3. Run `python gampass.py setup`*
+    - this encrypts GAM all secrets
         - ["client_secrets.json", "oauth2service.json", "oauth2.txt"]
+        - If you have multiple GAM domains, all will be encrypted
     - this will generate a new `gampass.key` file.
-    - this adds `gampass` alias to ~/.zshrc
+    - this adds `gampass` and `gampass_cli` alias to ~/.zshrc
         - if you don't use ~/.zshrc, adjust in `gampass.py`
 
-<img src="./screenshots/generate.png" width="80%">
+<img src="./screenshots/setup.png" width="100%">
 
 4. Open 1Password
     - create a vault named `gampass`
-    - add a new PASSWORD item with the title `gam`
+    - add a new password item with the title `gamkey`
     - add the content of the `gampass.key` the `credential` field
 
 <img src="./screenshots/1pass.png" width="100%">
 
-## Usage
-Put `gampass` before the gam command
+## GAM Usage
+Use this to make GAM calls.
+Put `gampass` before the GAM command
 
-`gampass [gam] [gam args]`
+`gampass gam [gam args]`
 
 ```bash
-gampass gam info domain
+gam select domain2 save | gam info domain
 ```
-<img src="./screenshots/terminal.png" width="65%">
+<img src="./screenshots/terminal.png" width="100%">
 
-macOS Touch ID prompts for your biometrics decrypting the secrets
+* macOS Touch ID prompts for your biometrics decrypting the secrets
 
-<img src="./screenshots/results.png" width="50%">
+<img src="./screenshots/results.png" width="100%">
 
-GAM results. GAMpass encrypts the secrets with the latest key automatically in the background.
+* GAM results
 
-## Limitations
-Eveyrything that works with GAM will work with *GAMpass*, except for the following:
-- Multi-workspace domain support via gam `select` does not work becase *GAMpass* currently only encrypts one set of secrets. 
-    -   This will be fixed in the future.
+## GAMpass CLI Usage
+Use only this to manage your GAM secrets
 
-- Scheduled jobs via cron, etc do not work because Biometrics is prompted to decrypt the secrets.
-    -   By design
-
-## gampass.py options
 ```bash
-Usage: python gampass.py [option]
+Usage: gampass_cli [option]
 
 Options:
-	generate	Generate a key and encrypt secrets
-	encrypt		Encrypt GAM files
-	decrypt		Decrypt GAM files
-
+        encrypt                 Encrypt GAM all secrets
+        decrypt                 Decrypt GAM all secrets
+        setup                   Setup a key and encrypt secrets
+        updates                 View updates documentation
+        sync                    Encrypt all domains with existing 1Password key
 Example:
-	python gampass.py generate
-	python gampass.py encrypt
-	python gampass.py decrypt
+        gampass_cli sync
 ```
 
+## Limitations
+Everything that works with GAM should work via *GAMpass*, except for the following:
+ - Scheduled workflows via cron, etc., do not work because intentionally biometrics are prompted to decrypt the secrets.
+
+##
 ### License
 
 *GAMpass* is released under the [MIT License](https://github.com/amadotejada/GAMpass/blob/main/LICENSE)
