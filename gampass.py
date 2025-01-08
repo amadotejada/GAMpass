@@ -18,7 +18,7 @@ def add_alias() -> None:
     Adds gampass and gampass_cli to user's `.zshrc` file
     If you don't use zsh, you can change the `.zshrc` file to your liking
     """
-    subprocess.Popen("""
+    subprocess.Popen(r"""
     cat << EOF >> %s/.zshrc
 
 alias gampass='python %s decrypt && gampass_encrypt &!'
@@ -26,7 +26,7 @@ alias gampass_cli='python %s $@'
 gampass_encrypt()
 {
 while true; do
-    if [[ \"\$(pgrep -x gam)\" ]]; then
+    if [[ "$(pgrep -x gam)" ]]; then
         sleep 2
     else
         python %s encrypt

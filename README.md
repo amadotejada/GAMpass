@@ -7,14 +7,12 @@ Many Google Workspace admins use [GAM](https://github.com/GAM-team/GAM) or [GAMA
 *GAMpass* is a simple tool to encrypt & decrypt GAM secrets at runtime using your biometrics with [unopass](https://github.com/amadotejada/unopass)
 
 ## Requirements
--  python 3.6+
+-  python 3.13+
 - `pip install -r requirements.txt`
 - [unopass](https://github.com/amadotejada/unopass) configured 
 - GAM/GAMADV-XTD3 configured
 
-Only tested on macOS 12.4+
-
-*GAMpass* is a work in progress, and should be considered beta software.
+Tested on macOS 12.4+
 
 ## First time setup
 **Back up your plaintext secrets in a different directory before you run setup.**
